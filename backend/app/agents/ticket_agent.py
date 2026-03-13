@@ -15,7 +15,13 @@ from app import store
 # loads cleanly even if the package is not yet installed.
 
 
-_FS_DOMAIN  = os.environ.get("FRESHSERVICE_DOMAIN", "")
+_FS_DOMAIN_RAW = os.environ.get("FRESHSERVICE_DOMAIN", "")
+# Accept either "molslinjen" or "molslinjen.freshservice.com"
+_FS_DOMAIN  = (
+    _FS_DOMAIN_RAW if "." in _FS_DOMAIN_RAW
+    else f"{_FS_DOMAIN_RAW}.freshservice.com" if _FS_DOMAIN_RAW
+    else ""
+)
 _FS_API_KEY = os.environ.get("FRESHSERVICE_API_KEY", "")
 
 # FreshService priority: 1=urgent 2=high 3=medium 4=low

@@ -1,5 +1,9 @@
 """FastAPI application entry point."""
 
+# Load .env into os.environ FIRST — agents read env vars at module import time
+from dotenv import load_dotenv
+load_dotenv()
+
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
