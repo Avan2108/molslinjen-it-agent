@@ -57,7 +57,7 @@ def _fs_create(
         "ticket_id":      f"INC-{data['id']}",
         "summary":         summary,
         "status":          "Open",
-        "estimated_wait":  "2–4 hours",
+        "estimated_wait":  "2-4 hours",
         "freshservice_id": data["id"],
     }
 
@@ -69,6 +69,7 @@ def _fs_list(per_page: int = 50) -> list[dict]:
     params = {"per_page": per_page, "order_type": "desc", "include": "requester"}
     resp   = http.get(url, params=params, auth=(_FS_API_KEY, "X"), timeout=15)
     resp.raise_for_status()
+    resp.encoding = "utf-8"   # force UTF-8 — FreshService returns UTF-8, requests may misdetect
     status_map = {2: "Open", 3: "Pending", 4: "Resolved", 5: "Closed"}
     return [
         {
@@ -77,7 +78,7 @@ def _fs_list(per_page: int = 50) -> list[dict]:
             "user_name":       (t.get("requester") or {}).get("name") or f"User #{t.get('requester_id', '?')}",
             "status":          status_map.get(t.get("status"), "Open"),
             "created_at":      t.get("created_at", ""),
-            "estimated_wait":  "2–4 hours",
+            "estimated_wait":  "2-4 hours",
         }
         for t in resp.json().get("tickets", [])
     ]
@@ -96,7 +97,7 @@ def _fs_get(fs_id: int) -> dict | None:
         "ticket_id":     f"INC-{data['id']}",
         "summary":        data.get("subject", ""),
         "status":         status_map.get(data.get("status"), "Open"),
-        "estimated_wait": "2–4 hours",
+        "estimated_wait": "2-4 hours",
     }
 
 
