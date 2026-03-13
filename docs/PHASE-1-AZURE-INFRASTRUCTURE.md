@@ -1,9 +1,10 @@
-# Phase 1: Azure Infrastructure & AI Setup
+# Phase 1: Infrastructure & AI Setup
 
 ## Overview
-Set up Azure AI services required for the IT Support Agent including Azure AI Foundry (OpenAI), Azure AI Search, and configure connections.
+Set up the infrastructure required for the IT Support Agent including OpenAI API access, Azure AI Search, and Azure Table Storage.
 
 ## Prerequisites
+- OpenAI API account with GPT-5 access
 - Azure subscription with Contributor access
 - Azure CLI installed and authenticated
 - Resource group created for the project
@@ -12,47 +13,47 @@ Set up Azure AI services required for the IT Support Agent including Azure AI Fo
 
 ## Tasks
 
-### 1.1 Create Azure AI Foundry Resource
+### 1.1 Configure OpenAI API Access
 
-**Assignee:** Infrastructure Engineer
-**Estimated effort:** 2-3 hours
+**Assignee:** Backend Developer
+**Estimated effort:** 30 minutes
 
 #### Steps:
-1. Create Azure OpenAI resource in Azure Portal
-   - Region: West Europe (or nearest supported region)
-   - Pricing tier: Standard S0
+1. Get OpenAI API key from https://platform.openai.com/api-keys
 
-2. Deploy models:
-   | Deployment Name | Model | Purpose |
-   |-----------------|-------|---------|
-   | `gpt-5-mini` | gpt-4o-mini | Main chat responses |
-   | `gpt-5` | gpt-4o | Triage/intent classification |
-   | `gpt-5-nano` | gpt-4o-mini | Pre-filter (fast) |
-   | `text-embedding-3-small` | text-embedding-3-small | Document embeddings |
+2. Verify GPT-5 access:
+   - Model: `gpt-5` - Used for all AI tasks (chat, triage, prefilter)
+   - Model: `text-embedding-3-small` - Used for document embeddings
 
 3. Note down:
-   - Endpoint URL
    - API Key
-   - Deployment names
+   - Organization ID (if applicable)
 
 #### Acceptance Criteria:
-- [ ] All 4 model deployments are active
-- [ ] Can make test API call to each deployment
-- [ ] Credentials stored in Azure Key Vault
+- [ ] API key obtained and working
+- [ ] GPT-5 model accessible
+- [ ] Embedding model accessible
+- [ ] API key stored securely (not in code)
 
 #### Testing:
 ```bash
-# Test chat deployment
-curl -X POST "https://<endpoint>/openai/deployments/gpt-5-mini/chat/completions?api-version=2024-02-01" \
+# Test GPT-5 chat
+curl -X POST "https://api.openai.com/v1/chat/completions" \
   -H "Content-Type: application/json" \
-  -H "api-key: <key>" \
-  -d '{"messages": [{"role": "user", "content": "Hello"}]}'
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d '{
+    "model": "gpt-5",
+    "messages": [{"role": "user", "content": "Hello, respond with OK"}]
+  }'
 
-# Test embedding deployment
-curl -X POST "https://<endpoint>/openai/deployments/text-embedding-3-small/embeddings?api-version=2024-02-01" \
+# Test embedding
+curl -X POST "https://api.openai.com/v1/embeddings" \
   -H "Content-Type: application/json" \
-  -H "api-key: <key>" \
-  -d '{"input": "test text"}'
+  -H "Authorization: Bearer $OPENAI_API_KEY" \
+  -d '{
+    "model": "text-embedding-3-small",
+    "input": "test text"
+  }'
 ```
 
 ---
@@ -65,7 +66,7 @@ curl -X POST "https://<endpoint>/openai/deployments/text-embedding-3-small/embed
 #### Steps:
 1. Create Azure AI Search resource
    - Pricing tier: Basic (minimum for semantic ranking)
-   - Region: Same as AI Foundry
+   - Region: West Europe (or nearest)
 
 2. Create index `it-knowledge` with schema:
    ```json
@@ -104,7 +105,7 @@ curl -X POST "https://<endpoint>/openai/deployments/text-embedding-3-small/embed
 
 #### Acceptance Criteria:
 - [ ] Index created with correct schema
-- [ ] Vector search configured
+- [ ] Vector search configured (1536 dimensions for text-embedding-3-small)
 - [ ] Semantic ranking enabled
 - [ ] Can perform test queries
 
@@ -164,15 +165,21 @@ print(f"Tables: {tables}")
 ### 1.4 Create Backend Configuration
 
 **Assignee:** Backend Developer
-**Estimated effort:** 1 hour
+**Estimated effort:** 30 minutes
 
 #### Steps:
 1. Update `backend/.env` with actual values:
    ```env
-   AZURE_FOUNDRY_ENDPOINT=https://your-resource.openai.azure.com/
-   AZURE_FOUNDRY_KEY=<key>
+   # OpenAI
+   OPENAI_API_KEY=sk-your-api-key
+   OPENAI_MODEL=gpt-5
+   OPENAI_EMBEDDING_MODEL=text-embedding-3-small
+
+   # Azure AI Search
    AZURE_SEARCH_ENDPOINT=https://your-search.search.windows.net
    AZURE_SEARCH_KEY=<key>
+
+   # Azure Table Storage
    AZURE_STORAGE_CONNECTION_STRING=<connection-string>
    AZURE_STORAGE_ACCOUNT_NAME=<account-name>
    ```
@@ -180,7 +187,7 @@ print(f"Tables: {tables}")
 2. Verify configuration loads:
    ```bash
    cd backend
-   python -c "from app.config import get_settings; s = get_settings(); print(s.AZURE_FOUNDRY_ENDPOINT)"
+   python -c "from app.config import get_settings; s = get_settings(); print(s.OPENAI_MODEL)"
    ```
 
 #### Acceptance Criteria:
@@ -190,31 +197,69 @@ print(f"Tables: {tables}")
 
 ---
 
-### 1.5 Create Azure SDK Integration Module
+### 1.5 Create SDK Integration Module
 
 **Assignee:** Backend Developer
 **Estimated effort:** 4 hours
 
 #### Steps:
 1. Create `backend/app/services/__init__.py`
-2. Create `backend/app/services/ai_client.py`:
+
+2. Create `backend/app/services/openai_client.py`:
    ```python
-   # Azure OpenAI client wrapper
-   # - get_chat_completion()
-   # - get_embedding()
-   # - Retry logic with exponential backoff
+   """OpenAI client wrapper."""
+
+   from openai import AsyncOpenAI
+   from app.config import get_settings
+
+   class OpenAIClient:
+       def __init__(self):
+           settings = get_settings()
+           self.client = AsyncOpenAI(
+               api_key=settings.OPENAI_API_KEY.get_secret_value(),
+               base_url=settings.OPENAI_BASE_URL,
+           )
+           self.model = settings.OPENAI_MODEL
+           self.embedding_model = settings.OPENAI_EMBEDDING_MODEL
+
+       async def chat(
+           self,
+           messages: list[dict],
+           temperature: float = 0.7,
+           max_tokens: int = 1000,
+       ) -> str:
+           """Get chat completion from GPT-5."""
+           response = await self.client.chat.completions.create(
+               model=self.model,
+               messages=messages,
+               temperature=temperature,
+               max_tokens=max_tokens,
+           )
+           return response.choices[0].message.content
+
+       async def embed(self, text: str) -> list[float]:
+           """Get embedding vector."""
+           response = await self.client.embeddings.create(
+               model=self.embedding_model,
+               input=text,
+           )
+           return response.data[0].embedding
    ```
 
 3. Create `backend/app/services/search_client.py`:
    ```python
-   # Azure AI Search client wrapper
+   """Azure AI Search client wrapper."""
+
    # - search_documents()
    # - hybrid_search() (text + vector)
    # - index_document()
    ```
 
+4. Add `openai>=1.0.0` to requirements.txt
+
 #### Acceptance Criteria:
-- [ ] AI client can call all deployments
+- [ ] OpenAI client can call GPT-5
+- [ ] OpenAI client can generate embeddings
 - [ ] Search client can query index
 - [ ] Error handling for rate limits
 - [ ] Logging for debugging
@@ -222,7 +267,7 @@ print(f"Tables: {tables}")
 #### Testing:
 ```bash
 cd backend
-pytest tests/test_ai_client.py -v
+pytest tests/test_openai_client.py -v
 pytest tests/test_search_client.py -v
 ```
 
@@ -232,12 +277,10 @@ pytest tests/test_search_client.py -v
 
 | Variable | Source | Required |
 |----------|--------|----------|
-| `AZURE_FOUNDRY_ENDPOINT` | AI Foundry resource | Yes |
-| `AZURE_FOUNDRY_KEY` | AI Foundry keys | Yes |
-| `AZURE_FOUNDRY_CHAT_DEPLOYMENT` | Deployment name | Yes |
-| `AZURE_FOUNDRY_TRIAGE_DEPLOYMENT` | Deployment name | Yes |
-| `AZURE_FOUNDRY_PREFILTER_DEPLOYMENT` | Deployment name | Yes |
-| `AZURE_FOUNDRY_EMBEDDING_DEPLOYMENT` | Deployment name | Yes |
+| `OPENAI_API_KEY` | OpenAI Platform | Yes |
+| `OPENAI_MODEL` | Model name (gpt-5) | Yes |
+| `OPENAI_EMBEDDING_MODEL` | Model name | Yes |
+| `OPENAI_BASE_URL` | API base URL | No (has default) |
 | `AZURE_SEARCH_ENDPOINT` | Search resource | Yes |
 | `AZURE_SEARCH_KEY` | Search keys | Yes |
 | `AZURE_SEARCH_INDEX` | Index name | Yes |
@@ -246,9 +289,42 @@ pytest tests/test_search_client.py -v
 
 ---
 
+## Architecture Note
+
+Using a single GPT-5 model simplifies the architecture:
+
+```
+┌─────────────────────────────────────────┐
+│              GPT-5 Model                │
+│  ┌─────────┐ ┌─────────┐ ┌───────────┐  │
+│  │  Chat   │ │ Triage  │ │ PreFilter │  │
+│  │Response │ │ Intent  │ │  Safety   │  │
+│  └─────────┘ └─────────┘ └───────────┘  │
+└─────────────────────────────────────────┘
+                    │
+                    ▼
+┌─────────────────────────────────────────┐
+│       text-embedding-3-small            │
+│           (Embeddings only)             │
+└─────────────────────────────────────────┘
+```
+
+**Benefits:**
+- Simpler configuration (one model to manage)
+- Consistent quality across all AI tasks
+- Easier debugging and monitoring
+- Can adjust via prompt engineering per task
+
+**Trade-offs:**
+- Higher cost per request (GPT-5 vs mini models)
+- May be slower for simple tasks (consider caching)
+
+---
+
 ## Definition of Done
-- [ ] All Azure resources provisioned
+- [ ] OpenAI API access configured
+- [ ] Azure AI Search index created
+- [ ] Azure Storage account created
 - [ ] SDK clients implemented and tested
 - [ ] Environment configuration documented
 - [ ] Integration tests passing
-- [ ] Cost monitoring alerts configured

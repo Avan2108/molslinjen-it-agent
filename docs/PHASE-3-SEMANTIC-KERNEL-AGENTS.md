@@ -4,7 +4,7 @@
 Implement the AI agent layer using Microsoft Semantic Kernel, including the Triage Agent for intent classification, the main IT Support Agent for conversations, and the Pre-filter Agent for content safety.
 
 ## Prerequisites
-- Phase 1 completed (Azure AI services configured)
+- Phase 1 completed (OpenAI API and Azure services configured)
 - Phase 2 completed (Authentication working)
 - Semantic Kernel SDK installed
 
@@ -24,36 +24,33 @@ Implement the AI agent layer using Microsoft Semantic Kernel, including the Tria
    """Semantic Kernel initialization and configuration."""
 
    from semantic_kernel import Kernel
-   from semantic_kernel.connectors.ai.open_ai import AzureChatCompletion
+   from semantic_kernel.connectors.ai.open_ai import OpenAIChatCompletion
    from app.config import get_settings
 
-   def create_kernel(deployment_name: str | None = None) -> Kernel:
-       """Create configured Semantic Kernel instance."""
+   def create_kernel() -> Kernel:
+       """Create configured Semantic Kernel instance with GPT-5."""
        settings = get_settings()
        kernel = Kernel()
 
-       # Add Azure OpenAI chat service
+       # Add OpenAI chat service (single GPT-5 model for all tasks)
        kernel.add_service(
-           AzureChatCompletion(
-               deployment_name=deployment_name or settings.AZURE_FOUNDRY_CHAT_DEPLOYMENT,
-               endpoint=settings.AZURE_FOUNDRY_ENDPOINT,
-               api_key=settings.AZURE_FOUNDRY_KEY.get_secret_value(),
+           OpenAIChatCompletion(
+               ai_model_id=settings.OPENAI_MODEL,  # gpt-5
+               api_key=settings.OPENAI_API_KEY.get_secret_value(),
            )
        )
 
        return kernel
 
-   # Kernel instances for different purposes
-   def get_chat_kernel() -> Kernel:
+   # Single kernel factory - GPT-5 handles all tasks
+   def get_kernel() -> Kernel:
+       """Get kernel configured with GPT-5."""
        return create_kernel()
 
-   def get_triage_kernel() -> Kernel:
-       settings = get_settings()
-       return create_kernel(settings.AZURE_FOUNDRY_TRIAGE_DEPLOYMENT)
-
-   def get_prefilter_kernel() -> Kernel:
-       settings = get_settings()
-       return create_kernel(settings.AZURE_FOUNDRY_PREFILTER_DEPLOYMENT)
+   # Aliases for backward compatibility (all use same GPT-5 model)
+   get_chat_kernel = get_kernel
+   get_triage_kernel = get_kernel
+   get_prefilter_kernel = get_kernel
    ```
 
 2. **Create `backend/app/agents/prompts/` directory**

@@ -13,13 +13,11 @@ class Settings(BaseSettings):
         case_sensitive=True,
     )
 
-    # Azure AI Foundry
-    AZURE_FOUNDRY_ENDPOINT: str = ""
-    AZURE_FOUNDRY_KEY: SecretStr = SecretStr("")
-    AZURE_FOUNDRY_CHAT_DEPLOYMENT: str = "gpt-5-mini"
-    AZURE_FOUNDRY_TRIAGE_DEPLOYMENT: str = "gpt-5"
-    AZURE_FOUNDRY_PREFILTER_DEPLOYMENT: str = "gpt-5-nano"
-    AZURE_FOUNDRY_EMBEDDING_DEPLOYMENT: str = "text-embedding-3-small"
+    # OpenAI API
+    OPENAI_API_KEY: SecretStr = SecretStr("")
+    OPENAI_MODEL: str = "gpt-5"  # Used for chat, triage, and prefilter
+    OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-small"
+    OPENAI_BASE_URL: str = "https://api.openai.com/v1"  # Override for Azure or other providers
 
     # Azure AI Search
     AZURE_SEARCH_ENDPOINT: str = ""
