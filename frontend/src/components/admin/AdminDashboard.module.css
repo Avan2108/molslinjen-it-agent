@@ -1,0 +1,219 @@
+.root {
+  min-height: 100vh;
+  background: var(--gray-100);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+  padding: 0 32px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.backBtn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--blue);
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+}
+.backBtn:hover { background: var(--blue-light); }
+.headerTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--gray-800);
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  padding: 0 32px;
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-200);
+}
+.tab {
+  padding: 14px 18px;
+  background: none;
+  border: none;
+  border-bottom: 3px solid transparent;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-600);
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab:hover { color: var(--gray-800); }
+.tabActive { color: var(--blue); border-bottom-color: var(--blue); }
+
+/* Content */
+.content { padding: 28px 32px; flex: 1; }
+
+/* Stat grid */
+.statGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.statCard {
+  background: var(--white);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.statIcon { opacity: 0.8; margin-bottom: 4px; }
+.statValue { font-size: 32px; font-weight: 800; line-height: 1; }
+.statLabel { font-size: 12px; color: var(--gray-600); font-weight: 500; }
+
+.statCard_blue   .statIcon, .statCard_blue   .statValue { color: #0052CC; }
+.statCard_green  .statIcon, .statCard_green  .statValue { color: #00875A; }
+.statCard_orange .statIcon, .statCard_orange .statValue { color: #FF8B00; }
+.statCard_purple .statIcon, .statCard_purple .statValue { color: #6200ea; }
+
+/* Row */
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Panel */
+.panel {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 20px 24px;
+}
+.panelTitle {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--gray-800);
+  margin-bottom: 16px;
+}
+.empty { color: var(--gray-400); font-size: 13px; }
+
+/* Top questions */
+.questionList { display: flex; flex-direction: column; gap: 8px; }
+.questionRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px;
+  background: var(--gray-50);
+  border-radius: 8px;
+}
+.questionRank  { font-size: 11px; font-weight: 700; color: var(--gray-400); width: 20px; }
+.questionText  { flex: 1; font-size: 13px; color: var(--gray-800); }
+.questionCount { font-size: 12px; font-weight: 700; color: var(--blue); }
+
+/* Feedback stats */
+.feedbackStats {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 16px 0;
+}
+.feedbackItem  { text-align: center; }
+.feedbackNum   { font-size: 36px; font-weight: 800; line-height: 1; margin-bottom: 6px; }
+.feedbackLabel { font-size: 12px; color: var(--gray-600); display: flex; align-items: center; gap: 4px; justify-content: center; }
+.feedbackDivider { width: 1px; height: 60px; background: var(--gray-200); }
+
+/* Conversations */
+.convList  { display: flex; flex-direction: column; gap: 8px; }
+.convItem  { border: 1px solid var(--gray-200); border-radius: var(--radius-sm); overflow: hidden; }
+.convHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  background: var(--gray-50);
+  transition: background 0.15s;
+}
+.convHeader:hover { background: var(--gray-100); }
+.convMeta    { display: flex; align-items: center; gap: 10px; }
+.convId      { font-size: 12px; font-weight: 700; color: var(--blue); font-family: monospace; }
+.convCount   { font-size: 12px; color: var(--gray-600); }
+.convTime    { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--gray-400); }
+
+.escalatedBadge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #e65100;
+  background: #fff3e0;
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.convLog { padding: 12px 16px; background: var(--white); border-top: 1px solid var(--gray-200); }
+.logTurn  { margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid var(--gray-100); }
+.logTurn:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.logUser  { font-size: 13px; color: var(--gray-800); margin-bottom: 4px; }
+.logBot   { font-size: 13px; color: var(--gray-600); margin-bottom: 4px; }
+.logSources { font-size: 11px; color: var(--gray-400); }
+
+/* Tickets table */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.table th {
+  text-align: left;
+  padding: 10px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--gray-400);
+  border-bottom: 1px solid var(--gray-200);
+}
+.table td {
+  padding: 12px 12px;
+  border-bottom: 1px solid var(--gray-100);
+  vertical-align: middle;
+}
+.table tr:last-child td { border-bottom: none; }
+.table tr:hover td { background: var(--gray-50); }
+
+.ticketIdCell { font-weight: 700; color: var(--blue); font-family: monospace; }
+.summaryCell  { max-width: 260px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dateCell     { color: var(--gray-400); white-space: nowrap; }
+
+.statusBadge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 10px;
+  white-space: nowrap;
+}
+.statusBadge.open       { background: #e3f2fd; color: #1565c0; }
+.statusBadge.inprogress { background: #fff3e0; color: #e65100; }
+.statusBadge.pending    { background: #fce4ec; color: #c62828; }
+.statusBadge.resolved   { background: #e8f5e9; color: #2e7d32; }
+
+@media (max-width: 900px) {
+  .statGrid { grid-template-columns: repeat(2, 1fr); }
+  .row      { grid-template-columns: 1fr; }
+  .content  { padding: 20px 16px; }
+}

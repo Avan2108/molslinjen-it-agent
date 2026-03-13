@@ -7,6 +7,7 @@ python-dotenv>=1.0.0
 
 # HTTP client
 httpx>=0.26.0
+requests>=2.31.0
 
 # OpenAI
 openai>=1.0.0

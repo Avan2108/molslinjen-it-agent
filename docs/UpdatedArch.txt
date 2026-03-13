@@ -1,0 +1,32 @@
+The system uses a Handoff Orchestration pattern: the Triage Agent receives every user message, classifies intent, assembles context (user identity from Azure AD, conversation history from Cosmos DB), and hands off to the appropriate Specialist Agent. The Specialist owns the response and can call its tool set via MCP. Handoff is uni-directional per turn — the Specialist returns its response to the channel, not back through the Triage Agent.
+4.2.1 Triage Agent (gpt-5)
+– Receives raw user message + Azure AD identity + last 10 turns from Cosmos DB.
+– Classifies intent into: knowledge_query | ticket_action | ticket_status | diagnostics | admin | off_topic.
+– Pulls user display name and department from Azure AD (get_user MCP tool) — enriches context before handoff.
+– Detects language (EN / DA) and sets locale flag for all downstream agents.
+– Maintains off-topic guardrail: rejects non-IT queries with a short, polite explanation.
+– Handoff is typed — each specialist agent receives a structured context object, not raw text.
+4.2.2 Knowledge Agent (gpt-5-mini + vision)
+– Receives: query text, locale, up to 3 vision images (if user attached screenshots), conversation context.
+– Calls search_kb MCP tool: hybrid BM25 + vector search against Azure AI Search. Returns top-5 ranked chunks.
+– If images present: calls vision_analyse MCP tool to describe error before search.
+– Builds answer from retrieved chunks. Cites source document name in response.
+– Returns: answer text, source list, confidence score (0–1), and escalate flag (true if confidence < 0.6).
+– If escalate=true: passes control back to Triage Agent with reason — Triage routes to Ticket Agent.
+4.2.3 Ticket Agent (gpt-5-mini)
+– Handles: create ticket, check status, update ticket, list open tickets.
+– On create: assembles ticket body from conversation transcript + diagnostic results (if any) + user metadata.
+– Calls create_ticket MCP tool. Returns INC-xxxx reference number to user.
+– On status: calls list_user_tickets, formats result in plain language with status, assignee, last update.
+– Confirms resolution: if ticket status = closed, asks user 'Is your issue actually resolved?' — if no, calls update_ticket to re-open.
+4.2.4 Diagnostics Agent (gpt-5-mini, Sequential pattern)
+– Activated when Triage detects an unresolved technical problem requiring step-by-step diagnosis.
+– Runs a Sequential sub-orchestration: Classify Problem → Generate Diagnostic Steps → Confirm Each Step → Resolve or Escalate.
+– Asks one question at a time. Never presents a list of questions.
+– Accumulates a structured diagnostic summary. Passes to Ticket Agent on escalation.
+– Can terminate early if user says 'just raise a ticket' — collected steps are preserved.
+4.2.5 Admin Agent (gpt-5-mini, ITAdmin role only)
+– Role-gated: only activates if Azure AD token contains ITAdmin role claim.
+– Handles: trigger re-index, send proactive notification, view unanswered questions, initiate GDPR data deletion.
+– GDPR deletion: requires explicit confirmation step before calling delete_user_data MCP tool.
+– Proactive messaging: calls send_proactive MCP tool to push Teams message to a user or group.

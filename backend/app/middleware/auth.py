@@ -1,6 +1,13 @@
-"""Authentication middleware for Azure AD token validation."""
+"""Authentication middleware — Phase 1: optional auth (no Azure AD required).
 
-from typing import Annotated
+Phase 1: All requests are accepted. If an Authorization header is present and
+equals "dev-token", a developer/admin user is returned. Otherwise an anonymous
+employee user is returned so the API works without any token.
+
+Phase 3 (Azure AD): Replace `get_current_user` with real JWT validation.
+"""
+
+from typing import Annotated, Optional
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -9,100 +16,52 @@ from app.config import Settings, get_settings
 from app.models import UserClaims
 from app.models.enums import UserRole
 
-security = HTTPBearer()
-
-
-async def validate_token(
-    credentials: HTTPAuthorizationCredentials,
-    settings: Settings,
-) -> dict:
-    """Validate Azure AD JWT token.
-
-    TODO: Implement actual token validation using:
-    - python-jose for JWT decoding
-    - Azure AD JWKS endpoint for key retrieval
-    - Issuer and audience validation
-    """
-    # Placeholder - will be implemented with actual Azure AD validation
-    raise HTTPException(
-        status_code=status.HTTP_501_NOT_IMPLEMENTED,
-        detail="Token validation not yet implemented",
-    )
+# auto_error=False means FastAPI won't raise 401 when the header is absent
+security = HTTPBearer(auto_error=False)
 
 
 async def get_current_user(
-    credentials: Annotated[HTTPAuthorizationCredentials, Depends(security)],
+    credentials: Annotated[Optional[HTTPAuthorizationCredentials], Depends(security)],
     settings: Annotated[Settings, Depends(get_settings)],
 ) -> UserClaims:
-    """Extract and validate user claims from Azure AD token.
+    """Return user claims.
 
-    This dependency:
-    1. Extracts the Bearer token from Authorization header
-    2. Validates the token against Azure AD
-    3. Extracts user claims and maps roles
+    Phase 1 behaviour:
+    - No Authorization header → anonymous employee (full access to chat/tickets)
+    - Authorization: Bearer dev-token → dev/admin user
+    - Any other token → accepted as anonymous employee
 
-    Returns:
-        UserClaims with user information and roles
-
-    Raises:
-        HTTPException 401 if token is invalid or expired
-        HTTPException 403 if user lacks required permissions
+    Replace this function body in Phase 3 with real Azure AD validation.
     """
-    # For development, return a mock user
-    # TODO: Replace with actual token validation
-    if credentials.credentials == "dev-token":
+    if credentials and credentials.credentials == "dev-token":
         return UserClaims(
             oid="dev-user-oid",
             email="dev@molslinjen.dk",
             name="Development User",
             preferred_username="dev@molslinjen.dk",
-            roles=[UserRole.EMPLOYEE],
+            roles=[UserRole.EMPLOYEE, UserRole.IT_ADMIN],
             tenant_id="dev-tenant",
             department="IT",
             job_title="Developer",
         )
 
-    token_data = await validate_token(credentials, settings)
-
-    # Extract roles from token claims
-    roles = []
-    token_roles = token_data.get("roles", [])
-    for role in token_roles:
-        try:
-            roles.append(UserRole(role))
-        except ValueError:
-            # Unknown role, skip
-            pass
-
-    # Default to Employee if no roles assigned
-    if not roles:
-        roles = [UserRole.EMPLOYEE]
-
+    # Phase 1: anonymous employee — no token required
     return UserClaims(
-        oid=token_data["oid"],
-        email=token_data.get("email", token_data.get("preferred_username", "")),
-        name=token_data.get("name", ""),
-        preferred_username=token_data.get("preferred_username", ""),
-        roles=roles,
-        tenant_id=token_data.get("tid", ""),
-        department=token_data.get("department"),
-        job_title=token_data.get("jobTitle"),
+        oid="anonymous",
+        email="anonymous@localhost",
+        name="Anonymous",
+        preferred_username="anonymous",
+        roles=[UserRole.EMPLOYEE],
+        tenant_id="",
+        department=None,
+        job_title=None,
     )
 
 
 async def require_admin(
     user: Annotated[UserClaims, Depends(get_current_user)],
 ) -> UserClaims:
-    """Dependency that requires IT Admin role.
-
-    Use this dependency on admin-only endpoints.
-
-    Returns:
-        UserClaims if user is admin
-
-    Raises:
-        HTTPException 403 if user is not an admin
-    """
+    """Dependency that requires IT Admin role."""
     if not user.is_admin:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,

@@ -1,0 +1,51 @@
+Avan, let us develop one chat agent for following user stories
+ 
+Epic 1: Core Chatbot Interface
+US-1.1 As an employee, I want to access the IT chatbot via a web interface so that I can ask IT-related questions anytime.
+Acceptance Criteria: Responsive UI accessible from desktop and mobile; loads within 3 seconds
+US-1.2 As an employee, I want to see suggested questions when I open the chatbot so that I know what topics it can help with.
+US-1.3 As an employee, I want to switch between Danish and English so that I can interact in my preferred language.
+Acceptance Criteria: Language toggle persists across sessions; all UI elements translate
+US-1.4 As an employee, I want to see a typing indicator while the bot is processing so that I know my question is being handled.
+Epic 2: RAG & Document Retrieval
+US-2.1 As an employee, I want the chatbot to answer questions based on IT policies from SharePoint so that I get accurate, up-to-date information.
+Acceptance Criteria: Responses cite source documents; answers reflect current SharePoint content
+US-2.2 As an employee, I want to see which documents were used to generate an answer so that I can verify the information or read more.
+US-2.3 As a system, I need to ingest and index documents from SharePoint on a scheduled basis so that the knowledge base stays current.
+Acceptance Criteria: Incremental sync runs daily; full re-index weekly; supports PDF, Word, HTML
+US-2.4 As a system, I need to ingest content from Wired Relation so that HR/onboarding information is included in responses.
+US-2.5 As an employee, I want the chatbot to understand context from my previous messages so that I don't have to repeat myself.
+Epic 3: Freshservice Integration
+US-3.1 As an employee, I want to create a support ticket directly from the chat so that I don't have to open another system.
+Acceptance Criteria: Ticket created via Freshservice API; user receives ticket number
+US-3.2 As an employee, I want the chatbot to auto-populate ticket details based on our conversation so that I don't have to re-explain my issue.
+US-3.3 As an employee, I want to check the status of my existing tickets via the chatbot so that I stay informed without logging into Freshservice.
+US-3.4 As an IT agent, I want tickets created by the chatbot to include conversation history so that I have full context.
+Epic 4: Human Escalation
+US-4.1 As an employee, I want to request a callback from IT support so that I can speak to a human for complex issues.
+Acceptance Criteria: Request logged in Freshservice; estimated wait time shown
+US-4.2 As an employee, I want the chatbot to suggest escalation when it cannot answer my question so that I'm not stuck.
+US-4.3 As an employee, I want to see IT support contact details (phone, email) when escalating so that I have alternatives.
+US-4.4 As an IT manager, I want escalated conversations flagged for review so that we can improve the chatbot over time.
+Epic 5: Authentication & Security
+US-5.1 As an employee, I want to log in using my Molslinjen Microsoft account (SSO) so that I don't need separate credentials.
+Acceptance Criteria: Azure AD/Entra ID integration; session timeout after 8 hours
+US-5.2 As an employee, I want the chatbot to only show me documents I have access to so that security permissions are respected.
+US-5.3 As a security officer, I want all chat interactions logged and auditable so that we meet ISMS compliance requirements.
+Epic 6: Admin Dashboard
+US-6.1 As an IT admin, I want to view chatbot usage statistics so that I can measure adoption and ROI.
+Acceptance Criteria: Dashboard shows daily/weekly/monthly active users, total conversations
+US-6.2 As an IT admin, I want to see the most common questions asked so that I can identify knowledge gaps.
+US-6.3 As an IT admin, I want to see unanswered or escalated queries so that I can improve the knowledge base.
+US-6.4 As an IT admin, I want to manually add or update FAQ responses so that I can quickly address new topics.
+US-6.5 As an IT admin, I want to review conversation logs so that I can ensure quality and compliance.
+Epic 7: Analytics & Reporting
+US-7.1 As an IT manager, I want a weekly report on chatbot performance emailed to me so that I stay informed.
+Acceptance Criteria: Includes resolution rate, escalation rate, top topics, user satisfaction
+US-7.2 As an IT manager, I want to track ticket deflection rate so that I can quantify time savings.
+US-7.3 As an employee, I want to rate chatbot responses (thumbs up/down) so that the system can improve.
+ 
+Use vertex AI, take a sample mols document from internet like ferry schedule or something and do it
+ 
+FAQs etc.,
+ 

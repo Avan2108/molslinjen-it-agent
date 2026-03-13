@@ -2,30 +2,112 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom styles */
+/* ── CSS custom properties (design tokens used by CSS modules) ─────────────── */
+:root {
+  /* Brand */
+  --blue:       #0052CC;
+  --blue-dark:  #003d99;
+  --blue-light: #e8f0fe;
+  --blue-mid:   #4285f4;
+  --green:      #00875A;
+  --red:        #DE350B;
+  --orange:     #FF8B00;
+
+  /* Grays */
+  --gray-50:    #f8f9fa;
+  --gray-100:   #f1f3f4;
+  --gray-200:   #e8eaed;
+  --gray-400:   #9aa0a6;
+  --gray-600:   #5f6368;
+  --gray-800:   #202124;
+  --white:      #ffffff;
+
+  /* Shadows / radius */
+  --radius:     12px;
+  --radius-sm:  8px;
+  --shadow:     0 2px 12px rgba(0,0,0,.10);
+  --shadow-lg:  0 8px 32px rgba(0,0,0,.14);
+  --font:       'Inter', 'Segoe UI', system-ui, sans-serif;
+
+  /* Escalation card */
+  --escalate-bg:         #fff8e1;
+  --escalate-border:     #ffd54f;
+  --escalate-header-fg:  #e65100;
+  --escalate-body-fg:    #5f4800;
+
+  /* Ticket confirm */
+  --ticket-confirm-bg:     #e8f5e9;
+  --ticket-confirm-border: #a5d6a7;
+
+  /* Status badges */
+  --badge-open-bg:       #e3f2fd;  --badge-open-fg:       #1565c0;
+  --badge-inprogress-bg: #fff3e0;  --badge-inprogress-fg: #e65100;
+  --badge-pending-bg:    #fce4ec;  --badge-pending-fg:    #c62828;
+  --badge-resolved-bg:   #e8f5e9;  --badge-resolved-fg:   #2e7d32;
+
+  /* Feedback */
+  --feedback-up-bg:   #e8f5e9;
+  --feedback-down-bg: #fce4ec;
+}
+
+/* ── Dark theme ────────────────────────────────────────────────────────────── */
+[data-theme="dark"] {
+  --blue:       #4d9fff;
+  --blue-dark:  #3385ff;
+  --blue-light: #1a2d4a;
+  --blue-mid:   #4d9fff;
+  --green:      #4caf82;
+  --red:        #ff6b6b;
+  --orange:     #ffb347;
+
+  --gray-50:    #1e1f23;
+  --gray-100:   #18191c;
+  --gray-200:   #2e2f33;
+  --gray-400:   #8b939a;
+  --gray-600:   #a0a8b0;
+  --gray-800:   #e2e5e8;
+  --white:      #26272b;
+
+  --shadow:     0 2px 12px rgba(0,0,0,.4);
+  --shadow-lg:  0 8px 32px rgba(0,0,0,.5);
+
+  --escalate-bg:         #2a2200;
+  --escalate-border:     #6b5800;
+  --escalate-header-fg:  #ffb347;
+  --escalate-body-fg:    #c8a020;
+
+  --ticket-confirm-bg:     #0d2416;
+  --ticket-confirm-border: #1e4d2e;
+
+  --badge-open-bg:       #0d1f3d;  --badge-open-fg:       #4d9fff;
+  --badge-inprogress-bg: #2a1a00;  --badge-inprogress-fg: #ffb347;
+  --badge-pending-bg:    #2a0d0d;  --badge-pending-fg:    #ff6b6b;
+  --badge-resolved-bg:   #0d2416;  --badge-resolved-fg:   #4caf82;
+
+  --feedback-up-bg:   #0d2416;
+  --feedback-down-bg: #2a0d0d;
+}
+
+/* ── Base styles ───────────────────────────────────────────────────────────── */
 body {
-  @apply antialiased;
+  font-family: var(--font);
+  background: var(--gray-100);
+  color: var(--gray-800);
+  min-height: 100vh;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  transition: background 0.2s, color 0.2s;
 }
 
-/* Focus styles for accessibility */
-:focus-visible {
-  @apply outline-2 outline-offset-2 outline-primary-500;
+button { cursor: pointer; font-family: var(--font); }
+input  { font-family: var(--font); }
+
+.app-root {
+  width: 100%;
+  min-height: 100vh;
 }
 
-/* Scrollbar styling */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
-
-::-webkit-scrollbar-track {
-  @apply bg-gray-100;
-}
-
-::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 rounded-full;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400;
-}
+/* ── Scrollbar ─────────────────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--gray-200); border-radius: 10px; }

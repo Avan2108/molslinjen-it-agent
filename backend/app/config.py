@@ -13,11 +13,18 @@ class Settings(BaseSettings):
         case_sensitive=True,
     )
 
-    # OpenAI API
+    # Azure OpenAI (preferred — used by the agent code)
+    AZURE_OPENAI_ENDPOINT: str = ""
+    AZURE_OPENAI_API_KEY: SecretStr = SecretStr("")
+    AZURE_OPENAI_API_VERSION: str = "2024-02-01"
+    AZURE_OPENAI_CHAT_DEPLOYMENT: str = "gpt-4o-mini"
+    AZURE_OPENAI_EMBEDDING_DEPLOYMENT: str = "text-embedding-3-small"
+
+    # OpenAI API (fallback / architect compat)
     OPENAI_API_KEY: SecretStr = SecretStr("")
-    OPENAI_MODEL: str = "gpt-5"  # Used for chat, triage, and prefilter
+    OPENAI_MODEL: str = "gpt-4o-mini"
     OPENAI_EMBEDDING_MODEL: str = "text-embedding-3-small"
-    OPENAI_BASE_URL: str = "https://api.openai.com/v1"  # Override for Azure or other providers
+    OPENAI_BASE_URL: str = "https://api.openai.com/v1"
 
     # Azure AI Search
     AZURE_SEARCH_ENDPOINT: str = ""

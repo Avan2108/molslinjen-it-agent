@@ -1,25 +1,89 @@
-/**
- * Main application component
- */
+import { useState, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { t } from './lib/i18n';
+import LoginScreen from './components/LoginScreen';
+import ChatPage from './pages/ChatPage';
+import AdminPage from './pages/AdminPage';
 
-function App() {
+function AppRoutes() {
+  const [lang, setLang] = useState('en');
+  const [darkMode, setDarkMode] = useState(false);
+  const [userName, setUserName] = useState<string | null>(null);
+  const [userRole, setUserRole] = useState('employee');
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedLang = localStorage.getItem('lang');
+    if (storedLang && storedLang !== 'en') setLang(storedLang);
+    const storedDark = localStorage.getItem('darkMode');
+    if (storedDark === 'true') setDarkMode(true);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
+    localStorage.setItem('darkMode', String(darkMode));
+  }, [darkMode]);
+
+  const tr = (t as Record<string, Record<string, string>>)[lang];
+
+  function toggleLang() {
+    const next = lang === 'en' ? 'da' : 'en';
+    setLang(next);
+    localStorage.setItem('lang', next);
+  }
+
+  function handleLogin(name: string, role: string) {
+    setUserName(name);
+    setUserRole(role);
+  }
+
+  if (!userName) {
+    return (
+      <LoginScreen
+        lang={lang}
+        tr={tr}
+        onLogin={handleLogin}
+        onToggleLang={toggleLang}
+      />
+    );
+  }
+
+  const sharedProps = {
+    lang, tr, userName, userRole,
+    darkMode,
+    onToggleLang: toggleLang,
+    onToggleDark: () => setDarkMode(d => !d),
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50">
-      <header className="bg-primary-700 text-white p-4">
-        <h1 className="text-xl font-semibold">Molslinjen IT Support</h1>
-      </header>
-      <main className="container mx-auto p-4">
-        <div className="bg-white rounded-lg shadow p-6">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">
-            Welcome to IT Support
-          </h2>
-          <p className="text-gray-600">
-            This is the foundation setup. Components will be implemented in subsequent phases.
-          </p>
-        </div>
-      </main>
-    </div>
+    <Routes>
+      <Route
+        path="/"
+        element={
+          <ChatPage
+            {...sharedProps}
+            onOpenAdmin={() => navigate('/admin')}
+          />
+        }
+      />
+      <Route
+        path="/admin"
+        element={
+          userRole === 'admin'
+            ? <AdminPage tr={tr} onBack={() => navigate('/')} />
+            : <Navigate to="/" replace />
+        }
+      />
+      <Route path="*" element={<Navigate to="/" replace />} />
+    </Routes>
   );
 }
 
-export default App;
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
+  );
+}

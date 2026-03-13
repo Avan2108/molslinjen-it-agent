@@ -5,12 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "lint:fix": "eslint . --ext ts,tsx --fix",
+    "start": "vite",
+    "build": "vite build",
     "preview": "vite preview",
-    "test": "vitest",
-    "test:coverage": "vitest run --coverage",
+    "lint": "eslint . --ext ts,tsx,js,jsx --report-unused-disable-directives --max-warnings 0",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -18,9 +16,13 @@
     "@azure/msal-react": "^2.0.12",
     "axios": "^1.6.7",
     "clsx": "^2.1.0",
+    "lucide-react": "^0.575.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
+    "react-markdown": "^9.0.1",
     "react-router-dom": "^7.1.0",
+    "remark-gfm": "^4.0.1",
+    "uuid": "^9.0.0",
     "zustand": "^5.0.0"
   },
   "devDependencies": {
