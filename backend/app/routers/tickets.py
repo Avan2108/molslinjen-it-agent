@@ -6,6 +6,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
 from app import store
+from app.agents import ticket_agent
 
 router = APIRouter(prefix="/tickets", tags=["tickets"])
 
@@ -32,8 +33,8 @@ async def create_ticket(request: CreateTicketRequest) -> dict:
 
 @router.get("")
 async def list_tickets() -> list[dict]:
-    """List all tickets (admin view)."""
-    return store.get_all_tickets()
+    """List tickets — from FreshService if configured, else in-memory store."""
+    return ticket_agent.list_tickets()
 
 
 @router.get("/{ticket_id}")

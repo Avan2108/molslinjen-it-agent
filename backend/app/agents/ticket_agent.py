@@ -62,6 +62,27 @@ def _fs_create(
     }
 
 
+def _fs_list(per_page: int = 50) -> list[dict]:
+    """Fetch latest tickets from FreshService, newest first."""
+    import requests as http
+    url    = f"https://{_FS_DOMAIN}/api/v2/tickets"
+    params = {"per_page": per_page, "order_type": "desc", "include": "requester"}
+    resp   = http.get(url, params=params, auth=(_FS_API_KEY, "X"), timeout=15)
+    resp.raise_for_status()
+    status_map = {2: "Open", 3: "Pending", 4: "Resolved", 5: "Closed"}
+    return [
+        {
+            "ticket_id":      f"INC-{t['id']}",
+            "summary":         t.get("subject", ""),
+            "user_name":       (t.get("requester") or {}).get("name") or f"User #{t.get('requester_id', '?')}",
+            "status":          status_map.get(t.get("status"), "Open"),
+            "created_at":      t.get("created_at", ""),
+            "estimated_wait":  "2–4 hours",
+        }
+        for t in resp.json().get("tickets", [])
+    ]
+
+
 def _fs_get(fs_id: int) -> dict | None:
     import requests as http
     url  = f"https://{_FS_DOMAIN}/api/v2/tickets/{fs_id}"
@@ -170,6 +191,16 @@ def generate_ticket_summary(
         }
     except Exception:
         return {"title": "", "description": ""}
+
+
+def list_tickets() -> list[dict]:
+    """Return tickets from FreshService if configured, else local store."""
+    if _fs_available():
+        try:
+            return _fs_list()
+        except Exception:
+            pass
+    return store.get_all_tickets()
 
 
 def handle_create(
