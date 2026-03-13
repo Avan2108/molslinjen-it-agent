@@ -1,0 +1,120 @@
+/**
+ * English translations
+ */
+
+export const en = {
+  common: {
+    loading: 'Loading...',
+    error: 'An error occurred',
+    retry: 'Retry',
+    cancel: 'Cancel',
+    save: 'Save',
+    delete: 'Delete',
+    edit: 'Edit',
+    close: 'Close',
+    confirm: 'Confirm',
+    yes: 'Yes',
+    no: 'No',
+    search: 'Search',
+    submit: 'Submit',
+    back: 'Back',
+    next: 'Next',
+    previous: 'Previous',
+  },
+
+  auth: {
+    signIn: 'Sign in',
+    signOut: 'Sign out',
+    signInPrompt: 'Please sign in with your Molslinjen account',
+    signingIn: 'Signing in...',
+    signInError: 'Sign in failed. Please try again.',
+  },
+
+  chat: {
+    title: 'IT Support',
+    placeholder: 'Type your question...',
+    send: 'Send',
+    thinking: 'Thinking...',
+    newConversation: 'New conversation',
+    history: 'Conversation history',
+    noHistory: 'No previous conversations',
+    sources: 'Sources',
+    copyResponse: 'Copy response',
+    copied: 'Copied!',
+    feedbackPrompt: 'Was this helpful?',
+    feedbackThanks: 'Thanks for your feedback!',
+  },
+
+  tickets: {
+    title: 'Support Tickets',
+    create: 'Create Ticket',
+    subject: 'Subject',
+    description: 'Description',
+    priority: 'Priority',
+    status: 'Status',
+    created: 'Created',
+    updated: 'Updated',
+    noTickets: 'No tickets found',
+    viewDetails: 'View details',
+    addNote: 'Add note',
+    priorityUrgent: 'Urgent',
+    priorityHigh: 'High',
+    priorityMedium: 'Medium',
+    priorityLow: 'Low',
+    statusOpen: 'Open',
+    statusInProgress: 'In Progress',
+    statusResolved: 'Resolved',
+    statusClosed: 'Closed',
+  },
+
+  faqs: {
+    title: 'Frequently Asked Questions',
+    search: 'Search FAQs...',
+    noResults: 'No FAQs found',
+    helpful: 'Was this helpful?',
+    categories: 'Categories',
+    allCategories: 'All categories',
+  },
+
+  admin: {
+    title: 'Admin Dashboard',
+    analytics: 'Analytics',
+    knowledgeGaps: 'Knowledge Gaps',
+    faqs: 'Manage FAQs',
+    logs: 'Activity Logs',
+    reindex: 'Reindex Knowledge Base',
+    reindexing: 'Reindexing...',
+    reindexSuccess: 'Reindex completed successfully',
+    totalConversations: 'Total Conversations',
+    uniqueUsers: 'Unique Users',
+    resolutionRate: 'Resolution Rate',
+    escalationRate: 'Escalation Rate',
+    avgResponseTime: 'Avg Response Time',
+    satisfactionScore: 'Satisfaction Score',
+    topQueries: 'Top Queries',
+    intentBreakdown: 'Intent Breakdown',
+    gapResolved: 'Gap marked as resolved',
+  },
+
+  feedback: {
+    title: 'Provide Feedback',
+    reason: 'What went wrong?',
+    reasonTooLong: 'Response was too long',
+    reasonWrongAnswer: 'Answer was incorrect',
+    reasonDidNotHelp: 'Did not help solve my problem',
+    comment: 'Additional comments (optional)',
+    submitSuccess: 'Thank you for your feedback!',
+  },
+
+  errors: {
+    networkError: 'Network error. Please check your connection.',
+    serverError: 'Server error. Please try again later.',
+    unauthorized: 'Please sign in to continue.',
+    forbidden: 'You do not have permission to perform this action.',
+    notFound: 'The requested resource was not found.',
+    validationError: 'Please check your input and try again.',
+    unknownError: 'An unexpected error occurred.',
+  },
+};
+
+export type TranslationKeys = typeof en;

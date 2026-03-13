@@ -1,0 +1,120 @@
+/**
+ * Swedish translations
+ */
+
+import { TranslationKeys } from './en';
+
+export const sv: TranslationKeys = {
+  common: {
+    loading: 'Laddar...',
+    error: 'Ett fel uppstod',
+    retry: 'Försök igen',
+    cancel: 'Avbryt',
+    save: 'Spara',
+    delete: 'Radera',
+    edit: 'Redigera',
+    close: 'Stäng',
+    confirm: 'Bekräfta',
+    yes: 'Ja',
+    no: 'Nej',
+    search: 'Sök',
+    submit: 'Skicka',
+    back: 'Tillbaka',
+    next: 'Nästa',
+    previous: 'Föregående',
+  },
+
+  auth: {
+    signIn: 'Logga in',
+    signOut: 'Logga ut',
+    signInPrompt: 'Logga in med ditt Molslinjen-konto',
+    signingIn: 'Loggar in...',
+    signInError: 'Inloggningen misslyckades. Försök igen.',
+  },
+
+  chat: {
+    title: 'IT Support',
+    placeholder: 'Skriv din fråga...',
+    send: 'Skicka',
+    thinking: 'Tänker...',
+    newConversation: 'Ny konversation',
+    history: 'Konversationshistorik',
+    noHistory: 'Inga tidigare konversationer',
+    sources: 'Källor',
+    copyResponse: 'Kopiera svar',
+    copied: 'Kopierat!',
+    feedbackPrompt: 'Var detta till hjälp?',
+    feedbackThanks: 'Tack för din feedback!',
+  },
+
+  tickets: {
+    title: 'Supportärenden',
+    create: 'Skapa ärende',
+    subject: 'Ämne',
+    description: 'Beskrivning',
+    priority: 'Prioritet',
+    status: 'Status',
+    created: 'Skapad',
+    updated: 'Uppdaterad',
+    noTickets: 'Inga ärenden hittades',
+    viewDetails: 'Visa detaljer',
+    addNote: 'Lägg till anteckning',
+    priorityUrgent: 'Akut',
+    priorityHigh: 'Hög',
+    priorityMedium: 'Medium',
+    priorityLow: 'Låg',
+    statusOpen: 'Öppen',
+    statusInProgress: 'Pågående',
+    statusResolved: 'Löst',
+    statusClosed: 'Stängd',
+  },
+
+  faqs: {
+    title: 'Vanliga frågor',
+    search: 'Sök i FAQ...',
+    noResults: 'Inga FAQ hittades',
+    helpful: 'Var detta till hjälp?',
+    categories: 'Kategorier',
+    allCategories: 'Alla kategorier',
+  },
+
+  admin: {
+    title: 'Admin Dashboard',
+    analytics: 'Analyser',
+    knowledgeGaps: 'Kunskapsluckor',
+    faqs: 'Hantera FAQ',
+    logs: 'Aktivitetslogg',
+    reindex: 'Omindexera kunskapsbas',
+    reindexing: 'Omindexerar...',
+    reindexSuccess: 'Omindexering slutförd',
+    totalConversations: 'Totalt antal konversationer',
+    uniqueUsers: 'Unika användare',
+    resolutionRate: 'Lösningsgrad',
+    escalationRate: 'Eskaleringsgrad',
+    avgResponseTime: 'Genomsnittlig svarstid',
+    satisfactionScore: 'Nöjdhetspoäng',
+    topQueries: 'Vanligaste frågorna',
+    intentBreakdown: 'Avsiktsfördelning',
+    gapResolved: 'Lucka markerad som löst',
+  },
+
+  feedback: {
+    title: 'Ge feedback',
+    reason: 'Vad gick fel?',
+    reasonTooLong: 'Svaret var för långt',
+    reasonWrongAnswer: 'Svaret var felaktigt',
+    reasonDidNotHelp: 'Hjälpte inte att lösa mitt problem',
+    comment: 'Ytterligare kommentarer (valfritt)',
+    submitSuccess: 'Tack för din feedback!',
+  },
+
+  errors: {
+    networkError: 'Nätverksfel. Kontrollera din anslutning.',
+    serverError: 'Serverfel. Försök igen senare.',
+    unauthorized: 'Logga in för att fortsätta.',
+    forbidden: 'Du har inte behörighet att utföra denna åtgärd.',
+    notFound: 'Den begärda resursen hittades inte.',
+    validationError: 'Kontrollera dina inmatningar och försök igen.',
+    unknownError: 'Ett oväntat fel uppstod.',
+  },
+};

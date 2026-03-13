@@ -1,0 +1,32 @@
+# Core framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.5.0
+pydantic-settings>=2.1.0
+python-dotenv>=1.0.0
+
+# HTTP client
+httpx>=0.26.0
+
+# Azure services
+azure-data-tables>=12.4.0
+azure-identity>=1.15.0
+
+# Semantic Kernel (AI orchestration)
+semantic-kernel>=1.0.0
+
+# Authentication
+python-jose[cryptography]>=3.3.0
+msal>=1.26.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.23.0
+pytest-cov>=4.1.0
+
+# Linting and type checking
+ruff>=0.1.0
+mypy>=1.8.0
+
+# Types for mypy
+types-python-jose>=3.3.0

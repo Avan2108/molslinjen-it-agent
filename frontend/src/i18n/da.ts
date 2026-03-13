@@ -1,0 +1,120 @@
+/**
+ * Danish translations
+ */
+
+import { TranslationKeys } from './en';
+
+export const da: TranslationKeys = {
+  common: {
+    loading: 'Indlæser...',
+    error: 'Der opstod en fejl',
+    retry: 'Prøv igen',
+    cancel: 'Annuller',
+    save: 'Gem',
+    delete: 'Slet',
+    edit: 'Rediger',
+    close: 'Luk',
+    confirm: 'Bekræft',
+    yes: 'Ja',
+    no: 'Nej',
+    search: 'Søg',
+    submit: 'Indsend',
+    back: 'Tilbage',
+    next: 'Næste',
+    previous: 'Forrige',
+  },
+
+  auth: {
+    signIn: 'Log ind',
+    signOut: 'Log ud',
+    signInPrompt: 'Log ind med din Molslinjen-konto',
+    signingIn: 'Logger ind...',
+    signInError: 'Login mislykkedes. Prøv venligst igen.',
+  },
+
+  chat: {
+    title: 'IT Support',
+    placeholder: 'Skriv dit spørgsmål...',
+    send: 'Send',
+    thinking: 'Tænker...',
+    newConversation: 'Ny samtale',
+    history: 'Samtalehistorik',
+    noHistory: 'Ingen tidligere samtaler',
+    sources: 'Kilder',
+    copyResponse: 'Kopier svar',
+    copied: 'Kopieret!',
+    feedbackPrompt: 'Var dette nyttigt?',
+    feedbackThanks: 'Tak for din feedback!',
+  },
+
+  tickets: {
+    title: 'Supportsager',
+    create: 'Opret sag',
+    subject: 'Emne',
+    description: 'Beskrivelse',
+    priority: 'Prioritet',
+    status: 'Status',
+    created: 'Oprettet',
+    updated: 'Opdateret',
+    noTickets: 'Ingen sager fundet',
+    viewDetails: 'Se detaljer',
+    addNote: 'Tilføj note',
+    priorityUrgent: 'Akut',
+    priorityHigh: 'Høj',
+    priorityMedium: 'Medium',
+    priorityLow: 'Lav',
+    statusOpen: 'Åben',
+    statusInProgress: 'I gang',
+    statusResolved: 'Løst',
+    statusClosed: 'Lukket',
+  },
+
+  faqs: {
+    title: 'Ofte stillede spørgsmål',
+    search: 'Søg i FAQ...',
+    noResults: 'Ingen FAQ fundet',
+    helpful: 'Var dette nyttigt?',
+    categories: 'Kategorier',
+    allCategories: 'Alle kategorier',
+  },
+
+  admin: {
+    title: 'Admin Dashboard',
+    analytics: 'Analyser',
+    knowledgeGaps: 'Videnshuller',
+    faqs: 'Administrer FAQ',
+    logs: 'Aktivitetslog',
+    reindex: 'Genindekser vidensbase',
+    reindexing: 'Genindekserer...',
+    reindexSuccess: 'Genindeksering fuldført',
+    totalConversations: 'Samtaler i alt',
+    uniqueUsers: 'Unikke brugere',
+    resolutionRate: 'Løsningsrate',
+    escalationRate: 'Eskaleringsrate',
+    avgResponseTime: 'Gns. svartid',
+    satisfactionScore: 'Tilfredshedsscore',
+    topQueries: 'Top forespørgsler',
+    intentBreakdown: 'Intentfordeling',
+    gapResolved: 'Hul markeret som løst',
+  },
+
+  feedback: {
+    title: 'Giv feedback',
+    reason: 'Hvad gik galt?',
+    reasonTooLong: 'Svaret var for langt',
+    reasonWrongAnswer: 'Svaret var forkert',
+    reasonDidNotHelp: 'Hjalp ikke med at løse mit problem',
+    comment: 'Yderligere kommentarer (valgfrit)',
+    submitSuccess: 'Tak for din feedback!',
+  },
+
+  errors: {
+    networkError: 'Netværksfejl. Tjek venligst din forbindelse.',
+    serverError: 'Serverfejl. Prøv venligst igen senere.',
+    unauthorized: 'Log venligst ind for at fortsætte.',
+    forbidden: 'Du har ikke tilladelse til at udføre denne handling.',
+    notFound: 'Den ønskede ressource blev ikke fundet.',
+    validationError: 'Tjek venligst dine indtastninger og prøv igen.',
+    unknownError: 'Der opstod en uventet fejl.',
+  },
+};
