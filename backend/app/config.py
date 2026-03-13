@@ -53,7 +53,15 @@ class Settings(BaseSettings):
     CONFIDENCE_THRESHOLD_HIGH: float = 0.80
     CONFIDENCE_THRESHOLD_LOW: float = 0.40
     MAX_CONVERSATION_TURNS: int = 10
-    CORS_ORIGINS: list[str] = ["http://localhost:5173"]
+    # Dev: Vite auto-increments the port if 5173 is taken — allow the common range
+    CORS_ORIGINS: list[str] = [
+        "http://localhost:5173",
+        "http://localhost:5174",
+        "http://localhost:5175",
+        "http://localhost:5176",
+        "http://localhost:5177",
+        "http://localhost:3000",
+    ]
 
 
 def get_settings() -> Settings:
